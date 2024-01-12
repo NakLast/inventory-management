@@ -12,7 +12,13 @@ app.use(morgan('tiny'))
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get('/', (req, res) => {
-    res.status(200).render('index')
+    res.status(200).render('login')
+})
+
+app.get("/user", async(req, res) => {
+    const users = await service.getUser();
+
+    res.render('user', { users: users });
 })
 
 app.post("/login", async (req, res) => {
@@ -28,31 +34,21 @@ app.post("/login", async (req, res) => {
         res.status(400).send('incorrect password');
     };
 
-    const { product, quantity, amount } = req.body;
-    const productData = { product, quantity, amount };
-    await service.getInventory();
+    const inventory = await service.getInventory();
 
-    res.render('dashboard', { loggedinName: existingUser.username, productData: productData });
+    res.render('dashboard', { loggedinName: existingUser.username, productData: inventory, users: users });
 });
+
+app.get('/dashboard', async (req, res) => {
+    const users = await service.getUser();
+    const inventory = await service.getInventory();
+
+    res.status(200).render('dashboard', { productData: inventory, users: users });
+})
 
 app.get('/addProduct-form', (req, res) => {
     res.status(200).render('addProduct');
 });
-
-// app.get('/getProduct', async (req, res) => {
-//     const { product, quantity, amount } = req.body;
-
-//     try {
-//         const productData = { product, quantity, amount };
-//         await service.getInventory(productData);
-
-//         // res.status(200).send({productData: productData});
-//         res.render('dashboard', {productData: productData});
-//     } catch (error) {
-//         console.error('Error adding product:', error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// });
 
 app.post("/addProduct", async (req, res) => {
     const { product, quantity, amount } = req.body
@@ -61,8 +57,9 @@ app.post("/addProduct", async (req, res) => {
         const productData = { product, quantity, amount };
         await service.addInventory(productData);
 
-        // res.status(200).send('Product added successfully');
-        res.render('dashboard', {productData: productData});
+        const inventory = await service.getInventory();
+
+        res.render('dashboard', {productData: inventory});
     } catch (error) {
         console.error('Error adding product:', error);
         res.status(500).send('Internal Server Error');
@@ -96,12 +93,15 @@ app.post("/register", async (req, res) => {
         });
 
         console.log('User registered successfully.');
-        // res.status(200).send('User registered successfully');
-        res.render('index')
+        res.status(200).render('user', { users: users })
     } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).send('Internal Server Error');
     }
+});
+
+app.get('/logout', (req, res) => {
+    res.redirect('/');
 });
 
 module.exports = app

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Inventory Management </title>
+</head>
+
+<body>
+
+    <h1> Welcome user please login to inventory management. </h1>
+    <button onclick="redirectToDashboard()">Back to dashboard</button>
+    <button onclick="redirectToRegister()">Create User</button>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>User</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach((items)=>{%> 
+                <tr>
+                    <td><%=items.username%></td> 
+                </tr>
+            <%});%> 
+        </tbody>
+    </table>
+
+    <script>
+        function redirectToRegister() {
+            window.location.href = '/register-form';
+        }
+
+        function redirectToDashboard() {
+            window.location.href = '/dashboard';
+        }
+    </script>
+    </script>
+</body>
+
+</html>

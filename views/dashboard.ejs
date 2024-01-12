@@ -12,6 +12,7 @@
 
     <h1> Welcome user please login to inventory management. </h1>
     <button onclick="redirectToAddProduct()">Add Product</button>
+    <button onclick="redirectToUserTable()">User</button>
     <table border="1">
         <thead>
             <tr>
@@ -21,19 +22,29 @@
             </tr>
         </thead>
         <tbody>
-            <% for (let i = 0; i < productData.length; i++) { %>
+            <% productData.forEach((items)=>{%> 
                 <tr>
-                    <td><%= productData[i].product %></td>
-                    <td><%= productData[i].quantity %></td>
-                    <td><%= productData[i].amount %></td>
+                    <td><%=items.product%></td> 
+                    <td><%=items.quantity%></td> 
+                    <td><%=items.amount%></td> 
                 </tr>
-            <% } %>
+            <%});%> 
         </tbody>
     </table>
+
+    <button onclick="logout()">Logout</button>
 
     <script>
         function redirectToAddProduct() {
             window.location.href = '/addProduct-form';
+        }
+
+        function redirectToUserTable() {
+            window.location.href = '/user';
+        }
+
+        function logout() {
+            window.location.href = '/logout';
         }
     </script>
     </script>
