@@ -1,22 +1,31 @@
 function doPost(e) {
-    let action = e.parameter.action
+  var action = e.parameter.action
 
-    if (action == 'login') {
-        return checkLogin(e)
-    }
+  if (action == 'addUser') {
+    return addUser(e)
+  }
+
+  if (action == 'addInventory') {
+    return addInventory(e)
+  }
 }
 
-function checkLogin(e) {
-    let data = JSON.parse(e.postData.contents)
-    let id = data.id;
-    const ss = SpreadsheetApp.openById('1IvgAdEKzxkdsOPQrtd5J2CfU_6fYKQaIylvcsvzAWB8')
-    const sheet = ss.getSheetByName('Users')
+function addUser(e) {
+  const ss = SpreadsheetApp.openById('1IvgAdEKzxkdsOPQrtd5J2CfU_6fYKQaIylvcsvzAWB8')
+  const sheet = ss.getSheetByName('Users')
+  var user = JSON.parse(e.postData.contents)
 
-    if (id === 'user1') {
-      sheet.getRange('B2').setValue("true")
-    } else if (id === 'user2') {
-      sheet.getRange('B3').setValue("true")
-    }
+  sheet.appendRow([user.username, user.password])
 
-    return ContentService.createTextOutput("login success").setMimeType(ContentService.MimeType.TEXT)
+  return ContentService.createTextOutput("success").setMimeType(ContentService.MimeType.TEXT)
+}
+
+function addInventory(e) {
+  const ss = SpreadsheetApp.openById('1IvgAdEKzxkdsOPQrtd5J2CfU_6fYKQaIylvcsvzAWB8')
+  const sheet = ss.getSheetByName('Inventory')
+  var inventory = JSON.parse(e.postData.contents)
+
+  sheet.appendRow([inventory.product, inventory.quantity, inventory.amount])
+
+  return ContentService.createTextOutput("success").setMimeType(ContentService.MimeType.TEXT)
 }
