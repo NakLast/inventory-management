@@ -22,7 +22,7 @@ exports.getUser = (async (req, res) => {
 
 exports.addInventory = (async (productData) => {
     try {
-        const response = await axios.post('https://script.google.com/macros/s/AKfycbweMRPhY_xyyx73nvPZAZHDcP4SNjFQl0Z6kTHiMbDIN9N4LKZLF6coOPARyqdVhwb1gQ/exec?action=addInventory', productData)
+        const response = await axios.post('https://script.google.com/macros/s/AKfycbxoczEzSkn-c6cYIg1BBkl9S5SB6lBX5MwY8PAsJfV44rsx1dH3-uzTJezqV17ZoC_T4Q/exec?action=addInventory', productData)
         return response.data
     } catch (err) {
         console.log(err)
@@ -39,3 +39,54 @@ exports.getInventory = (async (req, res) => {
         res.status(500).send('server internal error')
     }
 })
+
+exports.addEmployee = (async (employeeData) => {
+    try {
+        const response = await axios.post('https://script.google.com/macros/s/AKfycbzXv6K1XxlmH-gHrPvtIyfwAyeuK3lRMXkkK_MyrN1MMvkiESaZI3G9FneA9FDJmQ4p3Q/exec?action=addEmployee', employeeData)
+        return response.data
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('server internal error')
+    }
+})
+
+exports.getEmployee = (async (req, res) => {
+    try {
+        const response = await axios.get('https://script.google.com/macros/s/AKfycbyg9Bg9WmgEBVkJ6bk3HBohsRwIntnuDN-tmu1GmIFqe5VWM3nIsHP0YWgMPomnSZ7qpA/exec?action=readEmployee')
+        return response.data
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('server internal error')
+    }
+})
+
+exports.getRecordWorkTime = (async (req, res) => {
+    try {
+        const response = await axios.get('https://script.google.com/macros/s/AKfycbzctc-ny55DuAxRisIVo21gjnH5eSFug3mW08Z46prrsFtCzQC4WFDcOwqNKcIvOL8fFA/exec?action=readRecordWorkTime')
+        return response.data
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('server internal error')
+    }
+})
+
+exports.addRecordWorkTime = (async (recordWorkTimeData) => {
+    try {
+        const response = await axios.post('https://script.google.com/macros/s/AKfycbxC3qDtmNdONS3DpR2UlR9tA01Q9T0SRgYzS1uE0ayhu872ibFvLJddfnmnXwCRVSPd/exec?action=addRecordWorkTime', recordWorkTimeData)
+        return response.data
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('server internal error')
+    }
+})
+
+exports.updateRecordWorkTime = async (recordData) => {
+    try {
+        const response = await axios.post('https://script.google.com/macros/s/AKfycbxdPqcjSZIcaEiezn8PD8UbNUNYc21ghb2F6LxlUNi0f68Be2x1yTdm7cB9C4_2V5sg1Q/exec?action=updateRecordWorkTime', recordData);
+        return response.data;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
