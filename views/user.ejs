@@ -6,35 +6,256 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Inventory Management </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            height: 2rem;
+            display: flex;
+            justify-content: space-between;
+            /* Align items horizontally, with space in between */
+        }
+
+        .header-buttons {
+            display: flex;
+        }
+
+        button {
+            margin-right: 10px;
+            color: white;
+            background-color: transparent;
+            border: 0;
+            cursor: pointer;
+        }
+
+        #logout-btn {
+            margin-left: auto;
+            background-color: #007bff;
+            padding: 8px 15px;
+        }
+
+        .content-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            color: black;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        nav h1 {
+            margin: 0;
+        }
+
+        #add-users-btn {
+            color: white;
+            background-color: #007bff;
+            padding: 8px 15px;
+            border: 0;
+            cursor: pointer;
+        }
+
+        #submit-btn {
+            color: white;
+            background-color: #007bff;
+            padding: 8px 15px;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 60px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        label {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        input {
+            flex: 2;
+        }
+
+        .close-btn {
+            color: white;
+            background-color: red;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            border: none;
+            padding: 4px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Dynamic column widths */
+        th:nth-child(1),
+        td:nth-child(1) {
+            width: 20%;
+        }
+
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: 30%;
+        }
+
+        th:nth-child(3),
+        td:nth-child(3),
+        th:nth-child(4),
+        td:nth-child(4) {
+            width: 25%;
+        }
+    </style>
 </head>
 
 <body>
+    <header>
+        <div class="header-buttons">
+            <button onclick="redirectToDashboard()">Dashboard</button>
+            <button onclick="redirectToUserTable()">User</button>
+            <button onclick="redirectToAddEmployee()">Employee</button>
+            <button onclick="redirectToAddRecordWorkTime()">Record Work Time</button>
+        </div>
+        <button id="logout-btn" onclick="logout()">Logout</button>
+    </header>
 
-    <h1> Welcome user please login to inventory management. </h1>
-    <button onclick="redirectToDashboard()">Back to dashboard</button>
-    <button onclick="redirectToRegister()">Create User</button>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>User</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% users.forEach((items)=>{%> 
+    <div class="content-container">
+        <nav>
+            <h1>Users</h1>
+            <button id="add-users-btn" onclick="openOverlay()">Create User</button>
+        </nav>
+
+        <table>
+            <thead>
                 <tr>
-                    <td><%=items.username%></td> 
+                    <th>User</th>
                 </tr>
-            <%});%> 
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <% users.forEach((items)=>{%> 
+                    <tr>
+                        <td><%=items.username%></td> 
+                    </tr>
+                <%});%> 
+            </tbody>
+        </table>
+    </div>
+
+    <div class="overlay" id="overlay">
+        <div class="form-container">
+            <h2>Register an Account</h2>
+            <form method="POST" action="/register" enctype="application/x-www-form-urlencoded">
+                <span class="close-btn" onclick="closeOverlay()">×</span>
+                <div class="container">
+                    <label for="username"><b>Username</b></label>
+                    <input type="text" placeholder="Enter Username" name="username" required />
+                </div>
+                <div class="container">
+                    <label for="password"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="password" required />
+                </div>
+                <div class="container">
+                    <label for="confirmPassword"><b>Confirm Password</b></label>
+                    <input type="password" placeholder="Confirm Password" name="confirmPassword" required />
+                </div>
+                
+                <button id="submit-btn" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
 
     <script>
         function redirectToRegister() {
-            window.location.href = '/register-form';
+            window.location.href = '/register-form'
         }
 
         function redirectToDashboard() {
-            window.location.href = '/dashboard';
+            window.location.href = '/dashboard'
+        }
+
+        function redirectToAddEmployee() {
+            window.location.href = '/employee'
+        }
+
+        function redirectToAddRecordWorkTime() {
+            window.location.href = '/recordWorkTime'
+        }
+
+        function openOverlay() {
+            document.getElementById("overlay").style.display = "flex"
+        }
+
+        function closeOverlay() {
+            document.getElementById("overlay").style.display = "none"
+        }
+
+        function logout() {
+            window.location.href = '/logout'
         }
     </script>
     </script>
