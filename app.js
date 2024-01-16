@@ -123,14 +123,14 @@ app.get('/employee-form', async (req, res) => {
 app.get('/employee', async (req, res) => {
     const employee = await service.getEmployee()
 
-    res.status(200).render('employee', { employee: employee})
+    res.status(200).render('employee', { employee: employee })
 })
 
 app.post('/addEmployee', async (req, res) => {
     const { first_name, last_name, phone } = req.body
 
     try {
-        const employeeData = { first_name, last_name, phone}
+        const employeeData = { first_name, last_name, phone }
         await service.addEmployee(employeeData)
 
         const employee = await service.getEmployee()
@@ -167,7 +167,7 @@ app.post('/addRecordWorkTime', async (req, res) => {
         }
 
         await service.addRecordWorkTime(recordWorkTimeData)
-        
+
         const employee_name = await service.getEmployee()
 
         const recordWorkTime = await service.getRecordWorkTime()
@@ -190,10 +190,20 @@ app.post("/updateRecordWorkTime", async (req, res) => {
     const { recordId, start_time, end_time } = req.body;
 
     try {
-        await service.updateRecordWorkTime({ id: recordId, start_time, end_time });
+        const recordData = await service.updateRecordWorkTime({ id: recordId, start_time, end_time });
+        await service.updateRecordWorkTime(recordData)
+        const recordWorkTime = await service.getRecordWorkTime()
 
-        res.redirect('/recordWorkTime');
-    } catch (error) {
+        const formattedRecordWorkTime = recordWorkTime.map(item => ({
+            date: item.date,
+            employee: item.employee,
+            start_time: formatTime(item.start_time),
+            end_time: formatTime(item.end_time),
+        }))
+        const employee_name = await service.getEmployee()
+
+        res.render('recordWorkTime', { recordWorkTime: formattedRecordWorkTime, employee_name: employee_name });
+    } catch (error) {   
         console.error('Error updating record work time:', error);
         res.status(500).send('Internal Server Error');
     }

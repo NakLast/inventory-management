@@ -70,19 +70,9 @@ exports.getRecordWorkTime = (async (req, res) => {
     }
 })
 
-exports.addRecordWorkTime = (async (recordWorkTimeData) => {
-    try {
-        const response = await axios.post('https://script.google.com/macros/s/AKfycbxC3qDtmNdONS3DpR2UlR9tA01Q9T0SRgYzS1uE0ayhu872ibFvLJddfnmnXwCRVSPd/exec?action=addRecordWorkTime', recordWorkTimeData)
-        return response.data
-    } catch (err) {
-        console.log(err)
-        res.status(500).send('server internal error')
-    }
-})
-
 exports.updateRecordWorkTime = async (recordData) => {
     try {
-        const response = await axios.post('https://script.google.com/macros/s/AKfycbxdPqcjSZIcaEiezn8PD8UbNUNYc21ghb2F6LxlUNi0f68Be2x1yTdm7cB9C4_2V5sg1Q/exec?action=updateRecordWorkTime', recordData);
+        const response = await axios.post('https://script.google.com/macros/s/AKfycbyF9DZjt5bcgz8uelSa_sb9eCXY2O5WZWdtXncbJm25vLGM1IqEJRJqAHnI91hZ4xuJ_w/exec?action=updateRecordWorkTime', recordData);
         return response.data;
     } catch (err) {
         console.log(err);
