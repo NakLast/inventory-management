@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-exports.addUser = (async  (username, password) => {
+exports.addUser = (async (username, password) => {
     try {
         const response = await axios.post('https://script.google.com/macros/s/AKfycbweMRPhY_xyyx73nvPZAZHDcP4SNjFQl0Z6kTHiMbDIN9N4LKZLF6coOPARyqdVhwb1gQ/exec?action=addUser', username, password);
         return response.data
@@ -62,7 +62,7 @@ exports.getEmployee = (async (req, res) => {
 
 exports.getRecordWorkTime = (async (req, res) => {
     try {
-        const response = await axios.get('https://script.google.com/macros/s/AKfycbzctc-ny55DuAxRisIVo21gjnH5eSFug3mW08Z46prrsFtCzQC4WFDcOwqNKcIvOL8fFA/exec?action=readRecordWorkTime')
+        const response = await axios.get('https://script.google.com/macros/s/AKfycbxWs5KmYlqk0HjjAAKHFC3Gh69SOThcuKTyU5_xvSeT4fA7fYwXjM_n5_36gCW7Q4KjUQ/exec?action=readRecordWorkTime')
         return response.data
     } catch (err) {
         console.log(err)
@@ -70,13 +70,39 @@ exports.getRecordWorkTime = (async (req, res) => {
     }
 })
 
-exports.updateRecordWorkTime = async (recordData) => {
+exports.addRecordWorkTime = (async (req, res) => {
     try {
-        const response = await axios.post('https://script.google.com/macros/s/AKfycbyF9DZjt5bcgz8uelSa_sb9eCXY2O5WZWdtXncbJm25vLGM1IqEJRJqAHnI91hZ4xuJ_w/exec?action=updateRecordWorkTime', recordData);
+        const response = await axios.post('https://script.google.com/macros/s/AKfycbxWs5KmYlqk0HjjAAKHFC3Gh69SOThcuKTyU5_xvSeT4fA7fYwXjM_n5_36gCW7Q4KjUQ/exec?action=addRecordWorkTime', recordWorkTimeData)
+        return response.data
+    } catch {
+        console.log(err)
+        res.status(500).send('server internal error')
+    }
+})
+
+exports.getRecordWorkTimeById = async (id) => {
+    try {
+        const response = await axios.get(`https://script.google.com/macros/s/AKfycbzM4ljnCPSj48kB5hhESSD052DXlwKqV93WIoWzOe2CdOxSlFG0n28POK7QJXc90AhUIQ/exec?action=readRecordWorkTime&id=${id}`);
         return response.data;
     } catch (err) {
-        console.log(err);
+        console.error('Error fetching record by id:', err);
         throw err;
     }
-};
+}
+
+exports.updateRecordWorkTime = async (id, start_time, end_time) => {
+    try {
+      const response = await axios.post(`https://script.google.com/macros/s/AKfycbysfv6PsHF3VaRcSsoQ_2bLvebHNBMVD2Hovqhz9m1wvHSJ2Qa8vkf7uSUyiz30ypDI4Q/exec?action=updateRecordWork&id=${id}`, {
+        start_time,
+        end_time,
+      });
+  
+      return response.data;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
+  
+
 

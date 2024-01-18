@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management</title>
+</head>
+
+<body>
+    <h1>Record Work Time Detail</h1>
+    <div id="record-details">
+        <!-- Display the details of the selected record -->
+        <form action="/recordWorkTime/update/<%= recordDetails.id %>" method="POST">
+            <p>Date:</p>
+            <input type="text" id="date" name="date" value="<%= recordDetails.date %>" readonly />
+            <p>Employee:</p>
+            <input type="text" id="employee" name="employee" value="<%= recordDetails.employee %>" readonly />
+            <p>Start Time:</p>
+            <input type="time" id="start_time" name="start_time" value="<%= recordDetails.start_time %>" />
+            <p>End Time:</p>
+            <input type="time" id="end_time" name="end_time" value="<%= recordDetails.end_time %>" />
+            <button type="submit">Update</button>
+        </form>
+    </div>
+    <!-- Include any additional HTML or scripts needed for the detail view -->
+</body>
+
+</html>

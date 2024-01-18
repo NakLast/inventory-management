@@ -147,6 +147,7 @@ app.get('/recordWorkTime', async (req, res) => {
     const recordWorkTime = await service.getRecordWorkTime()
 
     const formattedRecordWorkTime = recordWorkTime.map(item => ({
+        id: item.id,
         date: item.date,
         employee: item.employee,
         start_time: formatTime(item.start_time),
@@ -157,57 +158,71 @@ app.get('/recordWorkTime', async (req, res) => {
 })
 
 app.post('/addRecordWorkTime', async (req, res) => {
-    const { employee, start_time, end_time } = req.body
+    const { recordId, employee, start_time, end_time } = req.body;
 
     try {
         const recordWorkTimeData = {
+            id: recordId,
             employee,
             start_time,
             end_time,
-        }
+        };
 
-        await service.addRecordWorkTime(recordWorkTimeData)
+        await service.addRecordWorkTime(recordWorkTimeData);
 
-        const employee_name = await service.getEmployee()
-
-        const recordWorkTime = await service.getRecordWorkTime()
-
-        const formattedRecordWorkTime = recordWorkTime.map(item => ({
-            date: item.date,
-            employee: item.employee,
-            start_time: formatTime(item.start_time),
-            end_time: formatTime(item.end_time),
-        }))
-
-        res.render('recordWorkTime', { recordWorkTime: formattedRecordWorkTime, employee_name: employee_name })
-    } catch (error) {
-        console.error('Error adding record work time:', error)
-        res.status(500).send('Internal Server Error')
-    }
-})
-
-app.post("/updateRecordWorkTime", async (req, res) => {
-    const { recordId, start_time, end_time } = req.body;
-
-    try {
-        const recordData = await service.updateRecordWorkTime({ id: recordId, start_time, end_time });
-        await service.updateRecordWorkTime(recordData)
-        const recordWorkTime = await service.getRecordWorkTime()
+        const employee_name = await service.getEmployee();
+        const recordWorkTime = await service.getRecordWorkTime();
 
         const formattedRecordWorkTime = recordWorkTime.map(item => ({
             date: item.date,
             employee: item.employee,
             start_time: formatTime(item.start_time),
             end_time: formatTime(item.end_time),
-        }))
-        const employee_name = await service.getEmployee()
+        }));
 
         res.render('recordWorkTime', { recordWorkTime: formattedRecordWorkTime, employee_name: employee_name });
-    } catch (error) {   
-        console.error('Error updating record work time:', error);
+    } catch (error) {
+        console.error('Error adding record work time:', error);
         res.status(500).send('Internal Server Error');
     }
 })
+
+app.get('/recordWorkTime/detail/:id', async (req, res) => {
+    // Retrieve the record id from the URL parameter
+    const recordId = parseInt(req.params.id);
+
+    // Fetch the record details based on the id from your data source
+    const recordDetails = await service.getRecordWorkTimeById(recordId);
+
+    recordDetails.start_time = formatTime(recordDetails.start_time);
+    recordDetails.end_time = formatTime(recordDetails.end_time);
+
+    // Render the detail view with the record details
+    res.render('detail', { recordDetails });
+})
+
+// Assuming your service functions are imported as 'service'
+
+app.post('/recordWorkTime/update/:id', async (req, res) => {
+    try {
+        // Retrieve the record id from the URL parameter
+        const recordId = parseInt(req.params.id);
+
+        // Extract data from the form submission
+        const { start_time, end_time } = req.body;
+
+        // Perform the update operation using your service function
+        await service.updateRecordWorkTime(recordId, start_time, end_time);
+
+        // Redirect to the recordWorkTime route or any other route as needed
+        res.setHeader('Cache-Control', 'no-store');
+        res.redirect('/recordWorkTime');
+    } catch (error) {
+        console.error('Error updating record work time:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 app.get('/logout', (req, res) => {
     res.redirect('/')

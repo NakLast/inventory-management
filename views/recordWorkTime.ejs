@@ -199,7 +199,7 @@
                             <% }); %>
                     </select>
                     <label for="Start Time">Start Time:</label>
-                    <input type="time" name="start_time" required />
+                    <input type="time" name="start_time" />
 
                     <label for="End Time">End Time:</label>
                     <input type="time" name="end_time" required />
@@ -234,35 +234,14 @@
                             <%= items.end_time %>
                         </td>
                         <td>
-                            <!-- Add the "Edit" button with a data attribute to store the item's ID -->
-                            <button class="edit-btn" data-id="/updateRecordWorkTime/<%= items.id %>"
-                                onclick="editRecord(this)">Edit</button>
+                            <a href="/recordWorkTime/detail/<%= items.id %>">
+                                <button class="edit-btn">Edit</button>
+                            </a>
                         </td>
                     </tr>
                     <% }); %>
             </tbody>
         </table>
-    </div>
-
-    <div class="overlay" id="editOverlay">
-        <div class="form-container">
-            <button class="close-btn" onclick="closeEditModal()">x</button>
-            <h2>Edit Record</h2>
-            <form method="POST" action="/updateRecordWorkTime" enctype="application/x-www-form-urlencoded">
-                <div class="container">
-                    <input type="hidden" name="record_id" id="editRecordId" value="">
-                </div>
-                <div class="container">
-                    <label for="EditStartTime">Start Time:</label>
-                    <input type="time" name="edit_start_time" id="editStartTime" />
-                </div>
-                <div class="container">
-                    <label for="EditEndTime">End Time:</label>
-                    <input type="time" name="edit_end_time" id="editEndTime" />
-                </div>
-                <button id="submit-btn" type="submit">Save Changes</button>
-            </form>
-        </div>
     </div>
 
     <script>
@@ -280,16 +259,6 @@
 
         function redirectToAddRecordWorkTime() {
             window.location.href = '/recordWorkTime'
-        }
-
-        function editRecord(button) {
-            var recordId = button.getAttribute('data-id');
-            document.getElementById('editRecordId').value = recordId;
-            document.getElementById('editOverlay').style.display = 'flex';
-        }
-
-        function closeEditModal() {
-            document.getElementById('editOverlay').style.display = 'none';
         }
 
         function logout() {
