@@ -11,20 +11,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(morgan('tiny'))
 app.use(bodyParser.urlencoded({ extended: true }))
 
-function formatTime(timeString) {
-    const parsedTime = new Date(timeString);
-
-    if (isNaN(parsedTime.getTime())) {
-        return '-:-';
-    }
-
-    const formattedTime = parsedTime.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true,
-    });
-
-    return formattedTime;
+function formatAmountWithCommas(amount) {
+    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 app.get('/', (req, res) => {
@@ -67,19 +55,14 @@ app.get('/addProduct-form', (req, res) => {
 })
 
 app.post("/addProduct", async (req, res) => {
-    const { product_id, product, quantity, amount } = req.body
+    const { id, product_id, product, quantity, amount } = req.body
+    const productData = { id, product_id, product, quantity, amount }
 
-    try {
-        const productData = { product_id, product, quantity, amount }
-        await service.addInventory(productData)
+    await service.addInventory(productData)
 
-        const inventory = await service.getInventory()
+    const inventory = await service.getInventory()
 
-        res.render('dashboard', { productData: inventory })
-    } catch (error) {
-        console.error('Error adding product:', error)
-        res.status(500).send('Internal Server Error')
-    }
+    res.render('dashboard', { productData: inventory })
 })
 
 app.get('/register-form', (req, res) => {
@@ -88,32 +71,22 @@ app.get('/register-form', (req, res) => {
 
 app.post("/register", async (req, res) => {
     const { username, password } = req.body
+    const users = await service.getUser()
+    const existingUser = users.find(user => user.username === username)
 
-    try {
-        // Check if the user already exists
-        const users = await service.getUser()
-        const existingUser = users.find(user => user.username === username)
-
-        if (existingUser) {
-            console.log('User already exists.')
-            return res.status(400).send('User already exists.')
-        }
-
-        // Hash the password before saving it
-        const hashedPassword = await bcrypt.hash(password, 10)
-
-        // Save the new user to the database
-        await service.addUser({
-            username,
-            password: hashedPassword,
-        })
-
-        console.log('User registered successfully.')
-        res.status(200).render('user', { users: users })
-    } catch (error) {
-        console.error('Error registering user:', error)
-        res.status(500).send('Internal Server Error')
+    if (existingUser) {
+        console.log('User already exists.')
+        res.status(400).send('User already exists.')
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    await service.addUser({
+        username,
+        password: hashedPassword,
+    })
+
+    res.status(200).render('user', { users: users })
 })
 
 app.get('/employee-form', async (req, res) => {
@@ -126,20 +99,33 @@ app.get('/employee', async (req, res) => {
     res.status(200).render('employee', { employee: employee })
 })
 
+app.get('/product/detail/:id', async (req, res) => {
+    const recordId = parseInt(req.params.id)
+    const recordDetails = await service.getInventoryById(recordId)
+
+    res.render('inventoryDetail', { recordDetails, recordId })
+})
+
+app.post('/updateRecordInventory', async (req, res) => {
+    const { id, product_id, product, quantity, amount } = req.body
+    const updateRecordInvetory = { id, product_id, product, quantity, amount }
+
+    await service.updateRecordInvetory(updateRecordInvetory)
+
+    const inventory = await service.getInventory()
+
+    res.status(200).render('dashboard', { productData: inventory })
+})
+
 app.post('/addEmployee', async (req, res) => {
     const { first_name, last_name, phone } = req.body
+    const employeeData = { first_name, last_name, phone }
 
-    try {
-        const employeeData = { first_name, last_name, phone }
-        await service.addEmployee(employeeData)
+    await service.addEmployee(employeeData)
 
-        const employee = await service.getEmployee()
+    const employee = await service.getEmployee()
 
-        res.render('employee', { employee: employee })
-    } catch {
-        console.error('Error adding product:', error)
-        res.status(500).send('Internal Server Error')
-    }
+    res.render('employee', { employee: employee })
 })
 
 app.get('/recordWorkTime', async (req, res) => {
@@ -150,79 +136,54 @@ app.get('/recordWorkTime', async (req, res) => {
         id: item.id,
         date: item.date,
         employee: item.employee,
-        start_time: formatTime(item.start_time),
-        end_time: formatTime(item.end_time),
+        start_time: item.start_time,
+        end_time: item.end_time
     }))
 
     res.status(200).render('recordWorkTime', { recordWorkTime: formattedRecordWorkTime, employee_name: employee_name })
 })
 
 app.post('/addRecordWorkTime', async (req, res) => {
-    const { recordId, employee, start_time, end_time } = req.body;
-
-    try {
-        const recordWorkTimeData = {
-            id: recordId,
-            employee,
-            start_time,
-            end_time,
-        };
-
-        await service.addRecordWorkTime(recordWorkTimeData);
-
-        const employee_name = await service.getEmployee();
-        const recordWorkTime = await service.getRecordWorkTime();
-
-        const formattedRecordWorkTime = recordWorkTime.map(item => ({
-            date: item.date,
-            employee: item.employee,
-            start_time: formatTime(item.start_time),
-            end_time: formatTime(item.end_time),
-        }));
-
-        res.render('recordWorkTime', { recordWorkTime: formattedRecordWorkTime, employee_name: employee_name });
-    } catch (error) {
-        console.error('Error adding record work time:', error);
-        res.status(500).send('Internal Server Error');
+    const { recordId, employee, start_time, end_time } = req.body
+    const recordWorkTimeData = {
+        id: recordId,
+        employee,
+        start_time,
+        end_time,
     }
+
+    await service.addRecordWorkTime(recordWorkTimeData)
+
+    const employee_name = await service.getEmployee()
+    const recordWorkTime = await service.getRecordWorkTime()
+    const formattedRecordWorkTime = recordWorkTime.map(item => ({
+        date: item.date,
+        employee: item.employee,
+        start_time: item.start_time,
+        end_time: item.end_time
+    }))
+
+    res.render('recordWorkTime', { recordWorkTime: formattedRecordWorkTime, employee_name: employee_name })
 })
 
 app.get('/recordWorkTime/detail/:id', async (req, res) => {
-    // Retrieve the record id from the URL parameter
-    const recordId = parseInt(req.params.id);
+    const recordId = parseInt(req.params.id)
+    const recordDetails = await service.getRecordWorkTimeById(recordId)
 
-    // Fetch the record details based on the id from your data source
-    const recordDetails = await service.getRecordWorkTimeById(recordId);
-
-    recordDetails.start_time = formatTime(recordDetails.start_time);
-    recordDetails.end_time = formatTime(recordDetails.end_time);
-
-    // Render the detail view with the record details
-    res.render('detail', { recordDetails });
+    res.render('employeeDetail', { recordDetails, recordId })
 })
 
-// Assuming your service functions are imported as 'service'
+app.post('/updateRecordWorkTime', async (req, res) => {
+    const { id, start_time, end_time } = req.body
+    const updateRecordWorkTime = { id, start_time, end_time }
 
-app.post('/recordWorkTime/update/:id', async (req, res) => {
-    try {
-        // Retrieve the record id from the URL parameter
-        const recordId = parseInt(req.params.id);
+    await service.updateRecordWorkTime(updateRecordWorkTime)
 
-        // Extract data from the form submission
-        const { start_time, end_time } = req.body;
+    const employee_name = await service.getEmployee()
+    const recordWorkTime = await service.getRecordWorkTime()
 
-        // Perform the update operation using your service function
-        await service.updateRecordWorkTime(recordId, start_time, end_time);
-
-        // Redirect to the recordWorkTime route or any other route as needed
-        res.setHeader('Cache-Control', 'no-store');
-        res.redirect('/recordWorkTime');
-    } catch (error) {
-        console.error('Error updating record work time:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
+    res.status(200).render('recordWorkTime', { employee_name: employee_name, recordWorkTime: recordWorkTime })
+})
 
 app.get('/logout', (req, res) => {
     res.redirect('/')
