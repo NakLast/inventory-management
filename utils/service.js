@@ -27,8 +27,8 @@ exports.updateRecordInvetory = async (updateRecordInvetory) => {
     const response = await axios.post('https://script.google.com/macros/s/AKfycbzJIGyekFQroo00PV6MM2FexGsapeGg1_FVABM2FRA5dRJ35i9iDjwm9Z98nqN_ijIQpQ/exec?action=updateIRecordnvetory', updateRecordInvetory)
     return response.data
 }
-exports.deleteRecordInventory = async (productId) => {
-    const response = await axios.post(`https://script.google.com/macros/s/AKfycbxi1i0arxv7Jj_OO054G1ob2cDwvW48O8uUhUSvEj5unAQ5g8wR2PAY7vkw3SUDFOUnLQ/exec?action=deleteInventory`, productId);
+exports.deleteRecordInventory = async (id) => {
+    const response = await axios.post(`https://script.google.com/macros/s/AKfycbxszDApK16XiE1RRXn7byEQYWY0_OcRaBq-XwFz1gdegSIVw_Biyqhuy9hMaYONanU7_Q/exec?action=deleteInventory`, id);
     return response.data;
 }
 

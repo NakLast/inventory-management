@@ -116,9 +116,23 @@ app.post('/updateRecordInventory', async (req, res) => {
 
     await service.updateRecordInvetory(updateRecordInvetory)
 
-    const inventory = await service.getInventory()
+    res.status(200).redirect('/dashboard')
+})
 
-    res.status(200).render('dashboard', { productData: inventory })
+app.get('/product/delete/:id', async (req, res) => {
+    const recordId = parseInt(req.params.id)
+    const recordDetails = await service.getInventoryById(recordId)
+
+    res.render('inventoryDelete', { recordDetails, recordId })
+})
+
+app.post('/deleteRecordInventory', async (req, res) => {
+    const { id, product_id, product, quantity, amount } = req.body
+    const deleteRecordInvetory = { id, product_id, product, quantity, amount }
+
+    await service.deleteRecordInventory(deleteRecordInvetory)
+
+    res.status(200).redirect('/dashboard')
 })
 
 app.post('/addEmployee', async (req, res) => {
@@ -130,6 +144,13 @@ app.post('/addEmployee', async (req, res) => {
     const employee = await service.getEmployee()
 
     res.render('employee', { employee: employee })
+})
+
+app.get('/employee/detail/:id', async (req, res) => {
+    const recordId = parseInt(req.params.id)
+    const recordDetails = await service.getEmployeeById(recordId)
+
+    res.render('employeeDetail', { recordDetails, recordId })
 })
 
 app.get('/recordWorkTime', async (req, res) => {
@@ -156,16 +177,6 @@ app.post('/addRecordWorkTime', async (req, res) => {
     }
 
     await service.addRecordWorkTime(recordWorkTimeData)
-
-    const employee_name = await service.getEmployee()
-    const recordWorkTime = await service.getRecordWorkTime()
-    const formattedRecordWorkTime = recordWorkTime.map(item => ({
-        id: item.id,
-        date: item.date,
-        employee: item.employee,
-        start_time: formatTimeTo24Hours(item.start_time),
-        end_time: formatTimeTo24Hours(item.end_time)
-    }))
 
     res.status(200).redirect('/recordWorkTime')
 })

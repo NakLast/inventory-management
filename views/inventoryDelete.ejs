@@ -55,9 +55,11 @@
         .button-row {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px; /* Adjust the margin as needed */
+            margin-top: 20px;
+            /* Adjust the margin as needed */
         }
 
+        .del-btn,
         .cancel-btn {
             background-color: red;
             color: white;
@@ -72,37 +74,39 @@
             border: none;
             cursor: pointer;
         }
-
     </style>
 </head>
 
 <body>
     <header>
-        <h1>Update Record Work Time</h1>
+        <h1>Delete Product Data</h1>
     </header>
     <div id="record-details">
-        <form id="updateForm" action="/updateRecordWorkTime" method="POST">
+        <form id="updateForm" action="/deleteRecordInventory" method="POST">
             <input hidden type="text" id="id" name="id" value="<%= recordId %>">
 
-            <label for="employee">Employee:</label>
-            <input type="text" id="employee" name="employee" value="<%= recordDetails.employee %>" readonly>
+            <label for="product_id">Product ID:</label>
+            <input type="text" id="product_id" name="product_id" value="<%= recordDetails.product_id %>">
 
-            <label for="start_time">Start Time:</label>
-            <input type="text" id="start_time" name="start_time" value="<%= recordDetails.start_time %>">
+            <label for="product">Product:</label>
+            <input type="text" id="product" name="product" value="<%= recordDetails.product %>">
 
-            <label for="end_time">End Time:</label>
-            <input type="text" id="end_time" name="end_time" value="<%= recordDetails.end_time %>">
+            <label for="quantity">Quantity:</label>
+            <input type="text" id="quantity" name="quantity" value="<%= recordDetails.quantity %>">
+
+            <label for="amount">Amount:</label>
+            <input type="text" id="amount" name="amount" value="<%= recordDetails.amount %>">
 
             <div class="button-row">
-                <button type="submit">Save</button>
-                <button class="cancel-btn" onclick="redirectToRecordWorkTime()">Cancel</button>
+                <button type="submit">Delete</button>
+                <button class="cancel-btn" onclick="redirectToDashboard()">Cancel</button>
             </div>
         </form>
     </div>
 
     <script>
-        function redirectToRecordWorkTime() {
-            window.location.href = '/recordWorkTime'
+        function redirectToDashboard() {
+            window.location.href = '/dashboard'
         }
     </script>
 </body>
