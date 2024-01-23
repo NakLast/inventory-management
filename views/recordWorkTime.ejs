@@ -109,15 +109,16 @@
     .container {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin: 10px 0;
     }
 
     label {
-        flex: 1.8;
         margin-right: 10px;
     }
 
-    input {
+    input,
+    select {
         flex: 2.5;
     }
 
@@ -187,7 +188,7 @@
     <div class="content-container">
         <nav>
             <h1>Record Work Time</h1>
-            <form method="POST" action="/addRecordWorkTime" enctype="application/x-www-form-urlencoded">
+            <form method="POST" action="/addRecordWorkTime">
                 <div class="container">
                     <label for="Employee">Employee:</label>
                     <select name="employee" id="employee">
@@ -198,10 +199,10 @@
                             <% }); %>
                     </select>
                     <label for="Start Time">Start Time:</label>
-                    <input type="text" name="start_time" />
+                    <input type="time" name="start_time" />
 
                     <label for="End Time">End Time:</label>
-                    <input type="text" name="end_time" required />
+                    <input type="time" name="end_time" required />
 
                     <button id="submit-btn" type="submit">Submit</button>
                 </div>

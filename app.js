@@ -11,8 +11,12 @@ app.use(express.urlencoded({ extended: true }))
 app.use(morgan('tiny'))
 app.use(bodyParser.urlencoded({ extended: true }))
 
-function formatAmountWithCommas(amount) {
-    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+function formatTimeTo24Hours(timeString) {
+    const date = new Date(timeString)
+
+    if (isNaN(date.getTime())) return ''
+
+    return date.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
 }
 
 app.get('/', (req, res) => {
@@ -136,17 +140,16 @@ app.get('/recordWorkTime', async (req, res) => {
         id: item.id,
         date: item.date,
         employee: item.employee,
-        start_time: item.start_time,
-        end_time: item.end_time
+        start_time: formatTimeTo24Hours(item.start_time),
+        end_time: formatTimeTo24Hours(item.end_time)
     }))
 
     res.status(200).render('recordWorkTime', { recordWorkTime: formattedRecordWorkTime, employee_name: employee_name })
 })
 
 app.post('/addRecordWorkTime', async (req, res) => {
-    const { recordId, employee, start_time, end_time } = req.body
+    const { employee, start_time, end_time } = req.body
     const recordWorkTimeData = {
-        id: recordId,
         employee,
         start_time,
         end_time,
@@ -157,13 +160,14 @@ app.post('/addRecordWorkTime', async (req, res) => {
     const employee_name = await service.getEmployee()
     const recordWorkTime = await service.getRecordWorkTime()
     const formattedRecordWorkTime = recordWorkTime.map(item => ({
+        id: item.id,
         date: item.date,
         employee: item.employee,
-        start_time: item.start_time,
-        end_time: item.end_time
+        start_time: formatTimeTo24Hours(item.start_time),
+        end_time: formatTimeTo24Hours(item.end_time)
     }))
 
-    res.render('recordWorkTime', { recordWorkTime: formattedRecordWorkTime, employee_name: employee_name })
+    res.status(200).redirect('/recordWorkTime')
 })
 
 app.get('/recordWorkTime/detail/:id', async (req, res) => {

@@ -48,8 +48,8 @@ exports.getRecordWorkTime = (async (req, res) => {
     return response.data
 
 })
-exports.addRecordWorkTime = (async (req, res) => {
-    const response = await axios.post('https://script.google.com/macros/s/AKfycbxWs5KmYlqk0HjjAAKHFC3Gh69SOThcuKTyU5_xvSeT4fA7fYwXjM_n5_36gCW7Q4KjUQ/exec?action=addRecordWorkTime', recordWorkTimeData)
+exports.addRecordWorkTime = (async (recordWorkTimeData) => {
+    const response = await axios.post('https://script.google.com/macros/s/AKfycby1fuv43FHA9b0NjNairfv66jvu8A-oNcn5jG9tyGs-exriehJNyWulvRICdkq65RYsDQ/exec?action=addRecordWorkTime', recordWorkTimeData)
     return response.data
 
 })
