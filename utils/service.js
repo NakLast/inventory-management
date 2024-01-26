@@ -1,7 +1,7 @@
 const axios = require('axios')
 
 exports.getUser = (async (req, res) => {
-    const response = await axios.get('https://script.google.com/macros/s/AKfycbweMRPhY_xyyx73nvPZAZHDcP4SNjFQl0Z6kTHiMbDIN9N4LKZLF6coOPARyqdVhwb1gQ/exec?action=readData')
+    const response = await axios.get('https://script.google.com/macros/s/AKfycby1fuv43FHA9b0NjNairfv66jvu8A-oNcn5jG9tyGs-exriehJNyWulvRICdkq65RYsDQ/exec?action=readData')
     return response.data
 })
 exports.addUser = (async (username, password) => {
@@ -10,7 +10,7 @@ exports.addUser = (async (username, password) => {
 })
 
 exports.addInventory = (async (productData) => {
-    const response = await axios.post('https://script.google.com/macros/s/AKfycbxoczEzSkn-c6cYIg1BBkl9S5SB6lBX5MwY8PAsJfV44rsx1dH3-uzTJezqV17ZoC_T4Q/exec?action=addInventory', productData)
+    const response = await axios.post('https://script.google.com/macros/s/AKfycbyv1zINaMxy5Auxh7B0cb9D-x97X0qKu2PVMIFsu5bskbUP5oD7Psm0zBwdfMehCSvkwQ/exec?action=addInventory', productData)
     return response.data
 })
 
@@ -38,7 +38,7 @@ exports.getEmployee = (async (req, res) => {
 
 })
 exports.addEmployee = (async (employeeData) => {
-    const response = await axios.post('https://script.google.com/macros/s/AKfycbzXv6K1XxlmH-gHrPvtIyfwAyeuK3lRMXkkK_MyrN1MMvkiESaZI3G9FneA9FDJmQ4p3Q/exec?action=addEmployee', employeeData)
+    const response = await axios.post('https://script.google.com/macros/s/AKfycbw_ZgjRpUMly8GVvn3MpidejdD0GsVJtRZt6J37kt9L5UV-ZDD8Pv-fQU4G0pHROVSwmQ/exec?action=addEmployee', employeeData)
     return response.data
 
 })

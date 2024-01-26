@@ -64,9 +64,7 @@ app.post("/addProduct", async (req, res) => {
 
     await service.addInventory(productData)
 
-    const inventory = await service.getInventory()
-
-    res.render('dashboard', { productData: inventory })
+    res.status(200).redirect('/dashboard')
 })
 
 app.get('/register-form', (req, res) => {
@@ -154,7 +152,7 @@ app.get('/employee/detail/:id', async (req, res) => {
 })
 
 app.get('/recordWorkTime', async (req, res) => {
-    const employee_name = await service.getEmployee()
+    const employee = await service.getEmployee()
     const recordWorkTime = await service.getRecordWorkTime()
 
     const formattedRecordWorkTime = recordWorkTime.map(item => ({
@@ -165,7 +163,7 @@ app.get('/recordWorkTime', async (req, res) => {
         end_time: formatTimeTo24Hours(item.end_time)
     }))
 
-    res.status(200).render('recordWorkTime', { recordWorkTime: formattedRecordWorkTime, employee_name: employee_name })
+    res.status(200).render('recordWorkTime', { recordWorkTime: formattedRecordWorkTime, employee: employee })
 })
 
 app.post('/addRecordWorkTime', async (req, res) => {
@@ -185,6 +183,9 @@ app.get('/recordWorkTime/detail/:id', async (req, res) => {
     const recordId = parseInt(req.params.id)
     const recordDetails = await service.getRecordWorkTimeById(recordId)
 
+    recordDetails.start_time = formatTimeTo24Hours(recordDetails.start_time)
+    recordDetails.end_time = formatTimeTo24Hours(recordDetails.end_time)
+
     res.render('employeeDetail', { recordDetails, recordId })
 })
 
@@ -194,10 +195,7 @@ app.post('/updateRecordWorkTime', async (req, res) => {
 
     await service.updateRecordWorkTime(updateRecordWorkTime)
 
-    const employee_name = await service.getEmployee()
-    const recordWorkTime = await service.getRecordWorkTime()
-
-    res.status(200).render('recordWorkTime', { employee_name: employee_name, recordWorkTime: recordWorkTime })
+    res.status(200).redirect('/recordWorkTime')
 })
 
 app.get('/logout', (req, res) => {
