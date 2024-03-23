@@ -20,7 +20,7 @@ exports.getInventory = (async (req, res) => {
 
 })
 exports.getInventoryById = async (id) => {
-    const response = await axios.get(`https://script.google.com/macros/s/AKfycbwKlTB-Mgrl_a-ZUAL-h3qYnQ46lctE_F_w55XzuXuVET3X0tibaUTN1vNFHA9wR3g0-A/exec?action=readRecordInventory&id=${id}`)
+    const response = await axios.get(`https://script.google.com/macros/s/AKfycbwlYZLy40wAkVaxuCpXCeQ14CZMZN_mWzeL0mYCPYMRgWZvh0U4VCdsXSFpY87llo-ITw/exec?action=readRecordInventory&id=${id}`)
     return response.data
 }
 exports.updateRecordInvetory = async (updateRecordInventory) => {

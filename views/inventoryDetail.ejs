@@ -83,7 +83,7 @@
     </header>
     <div id="record-details">
         <form id="updateForm" action="/updateRecordInventory" method="POST">
-            <input hidden type="text" id="id" name="id" value="<%= recordId %>">
+            <input hidden type="text" id="id" name="id" value="<%= recordDetails.id %>">
 
             <label for="product_id">Product ID:</label>
             <input type="text" id="product_id" name="product_id" value="<%= recordDetails.product_id %>">
@@ -99,17 +99,17 @@
 
             <label for="amount">Amount:</label>
             <input type="text" id="amount" name="amount" value="<%= recordDetails.amount %>">
-
+            
             <div class="button-row">
                 <button type="submit">Save</button>
-                <button class="cancel-btn" onclick="redirectToRecordWorkTime()">Cancel</button>
+                <button class="cancel-btn" onclick="redirectToInventory()">Cancel</button>
             </div>
         </form>
     </div>
 
     <script>
-        function redirectToRecordWorkTime() {
-            window.location.href = '/dashboard'
+        function redirectToInventory() {
+            window.location.href = '/inventory'
         }
     </script>
 </body>

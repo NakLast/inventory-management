@@ -132,8 +132,8 @@ app.get('/product/delete/:id', async (req, res) => {
 })
 
 app.post('/deleteRecordInventory', async (req, res) => {
-    const { id, product_id, product, quantity, amount } = req.body
-    const deleteRecordInvetory = { id, product_id, product, quantity, amount }
+    const { id, product_id, product, quantity, cost, amount } = req.body
+    const deleteRecordInvetory = { id, product_id, product, quantity, cost, amount }
 
     await service.deleteRecordInventory(deleteRecordInvetory)
 
