@@ -191,6 +191,7 @@
     <header>
         <div class="header-buttons">
             <button onclick="redirectToDashboard()">Dashboard</button>
+            <button onclick="redirectToInventory()">Inventory</button>
             <button onclick="redirectToUserTable()">User</button>
             <button onclick="redirectToAddEmployee()">Employee</button>
             <button onclick="redirectToAddRecordWorkTime()">Record Work Time</button>
@@ -254,6 +255,14 @@
             window.location.href = '/employee-form'
         }
 
+        function redirectToDashboard() {
+            window.location.href = '/dashboard'
+        }
+        
+        function redirectToInventory() {
+            window.location.href = '/inventory'
+        }
+        
         function redirectToUserTable() {
             window.location.href = '/user'
         }
@@ -264,10 +273,6 @@
 
         function redirectToAddRecordWorkTime() {
             window.location.href = '/recordWorkTime'
-        }
-
-        function redirectToDashboard() {
-            window.location.href = '/dashboard'
         }
 
         function openOverlay() {

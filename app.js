@@ -54,6 +54,13 @@ app.get('/dashboard', async (req, res) => {
     res.status(200).render('dashboard', { productData: inventory, users: users })
 })
 
+app.get('/inventory', async (req, res) => {
+    const users = await service.getUser()
+    const inventory = await service.getInventory()
+
+    res.status(200).render('inventory', { productData: inventory, users: users })
+})
+
 app.get('/addProduct-form', (req, res) => {
     res.status(200).render('addProduct')
 })
@@ -64,7 +71,7 @@ app.post("/addProduct", async (req, res) => {
 
     await service.addInventory(productData)
 
-    res.status(200).redirect('/dashboard')
+    res.status(200).redirect('/inventory')
 })
 
 app.get('/register-form', (req, res) => {
@@ -109,12 +116,12 @@ app.get('/product/detail/:id', async (req, res) => {
 })
 
 app.post('/updateRecordInventory', async (req, res) => {
-    const { id, product_id, product, quantity, amount } = req.body
-    const updateRecordInvetory = { id, product_id, product, quantity, amount }
+    const { id, product_id, product, quantity, cost, amount } = req.body
+    const updateRecordInventory = { id, product_id, product, quantity, cost, amount }
 
-    await service.updateRecordInvetory(updateRecordInvetory)
+    await service.updateRecordInvetory(updateRecordInventory)
 
-    res.status(200).redirect('/dashboard')
+    res.status(200).redirect('/inventory')
 })
 
 app.get('/product/delete/:id', async (req, res) => {
@@ -130,7 +137,7 @@ app.post('/deleteRecordInventory', async (req, res) => {
 
     await service.deleteRecordInventory(deleteRecordInvetory)
 
-    res.status(200).redirect('/dashboard')
+    res.status(200).redirect('/inventory')
 })
 
 app.post('/addEmployee', async (req, res) => {

@@ -10,7 +10,7 @@ exports.addUser = (async (username, password) => {
 })
 
 exports.addInventory = (async (productData) => {
-    const response = await axios.post('https://script.google.com/macros/s/AKfycbyv1zINaMxy5Auxh7B0cb9D-x97X0qKu2PVMIFsu5bskbUP5oD7Psm0zBwdfMehCSvkwQ/exec?action=addInventory', productData)
+    const response = await axios.post('https://script.google.com/macros/s/AKfycbzTKZ0AImYvEuOC8jyOLNAT4DiP6CvuGBF0RJrPohGLJlMvDn2jnyR0KhxQbst-Ph4owg/exec?action=addInventory', productData)
     return response.data
 })
 
@@ -23,8 +23,8 @@ exports.getInventoryById = async (id) => {
     const response = await axios.get(`https://script.google.com/macros/s/AKfycbwKlTB-Mgrl_a-ZUAL-h3qYnQ46lctE_F_w55XzuXuVET3X0tibaUTN1vNFHA9wR3g0-A/exec?action=readRecordInventory&id=${id}`)
     return response.data
 }
-exports.updateRecordInvetory = async (updateRecordInvetory) => {
-    const response = await axios.post('https://script.google.com/macros/s/AKfycbzJIGyekFQroo00PV6MM2FexGsapeGg1_FVABM2FRA5dRJ35i9iDjwm9Z98nqN_ijIQpQ/exec?action=updateIRecordnvetory', updateRecordInvetory)
+exports.updateRecordInvetory = async (updateRecordInventory) => {
+    const response = await axios.post('https://script.google.com/macros/s/AKfycbyjw3cFZViWmB1EoMkxUG-ol-vdbb106x9vq_SQdoJXToU-pvWd3jpq3-eVJ5SqUEKHYQ/exec?action=updateRecordInventory', updateRecordInventory)
     return response.data
 }
 exports.deleteRecordInventory = async (id) => {

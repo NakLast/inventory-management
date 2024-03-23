@@ -199,7 +199,7 @@
         th,
         td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 8px;
             text-align: left;
         }
 
@@ -215,15 +215,16 @@
         }
 
         th:nth-child(2),
-        td:nth-child(2) {
-            width: 30%;
-        }
-
+        td:nth-child(2),
         th:nth-child(3),
         td:nth-child(3),
         th:nth-child(4),
-        td:nth-child(4) {
-            width: 25%;
+        td:nth-child(4),
+        th:nth-child(5),
+        td:nth-child(5),
+        th:nth-child(6),
+        td:nth-child(6) {
+            width: 12%;
         }
     </style>
 </head>
@@ -232,6 +233,7 @@
     <header>
         <div class="header-buttons">
             <button onclick="redirectToDashboard()">Dashboard</button>
+            <button onclick="redirectToInventory()">Inventory</button>
             <button onclick="redirectToUserTable()">User</button>
             <button onclick="redirectToAddEmployee()">Employee</button>
             <button onclick="redirectToAddRecordWorkTime()">Record Work Time</button>
@@ -241,25 +243,25 @@
 
     <div class="content-container">
         <nav>
-            <h1>Product</h1>
-            <button id="add-product-btn" onclick="openOverlay()">Add Product</button>
+            <h1>Dashboard</h1>
+            <!-- <button id="add-product-btn" onclick="openOverlay()">Add Product</button> -->
         </nav>
 
         <table>
             <thead>
                 <tr>
-                    <th>Product ID</th>
                     <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Amount</th>
+                    <th>Inventory</th>
+                    <th>Cost</th>
+                    <th>Inventory value</th>
+                    <th>Sell price value</th>
+                    <th>Evaluate profit</th>
+                    <th>Difference value</th>
                 </tr>
             </thead>
             <tbody>
                 <% productData.forEach((items)=>{%>
                     <tr>
-                        <td>
-                            <%=items.product_id%>
-                        </td>
                         <td>
                             <%=items.product%>
                         </td>
@@ -267,15 +269,24 @@
                             <%=items.quantity%>
                         </td>
                         <td>
-                            <%=items.amount%>
+                            <%=items.cost%>
                         </td>
                         <td>
-                            <a href="/product/detail/<%= items.id %>">
-                                <button class="edit-btn">Edit</button>
-                            </a>
-                            <a href="/product/delete/<%= items.id %>">
-                                <button class="del-btn">Delete</button>
-                            </a>
+                            <%=items.quantity * items.cost%>
+                        </td>
+                        <td>
+                            <%=items.quantity * items.amount%>
+                        </td>
+                        <td>
+                            <%=items.amount - items.cost%>
+                        </td>
+                        <td>
+                            <% let percentageValue=(items.amount - items.cost) / (items.quantity * items.amount) * 100;
+                                if (!isNaN(percentageValue)) { %>
+                                <%= percentageValue.toFixed(2) %>%
+                                    <% } else { %>
+                                        0
+                                        <% } %>
                         </td>
                     </tr>
                     <%});%>
@@ -323,6 +334,10 @@
     <script>
         function redirectToDashboard() {
             window.location.href = '/dashboard'
+        }
+
+        function redirectToInventory() {
+            window.location.href = '/inventory'
         }
 
         function redirectToAddProduct() {
