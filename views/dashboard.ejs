@@ -226,6 +226,24 @@
         td:nth-child(6) {
             width: 12%;
         }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 10px;
+            padding: 10px;
+        }
+
+        .item {
+            background-color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 20px 0;
+            font-size: 30px;
+        }
+
+        .item > div:first-child {
+        font-size: 14px;
+    }
     </style>
 </head>
 
@@ -242,9 +260,37 @@
     </header>
 
     <div class="content-container">
+        <div class="grid-container">
+            <div class="item">
+                <div>Inventory value</div>
+                <div>
+                    THB <%= totalInventory %>
+                </div>
+            </div>
+            <div class="item">
+                <div>Sell price value</div>
+                <div>
+                    THB <%= totalSellPrice %>
+                </div>
+            </div>
+            <div class="item">
+                <div>Evaluate profit</div>
+                <div>
+                    THB <%= totalEvaluate %>
+                </div>
+            </div>
+            <div class="item">
+                <div>Difference value</div>
+                <div>
+                    <%= totalDifference %>%
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container">
         <nav>
             <h1>Dashboard</h1>
-            <!-- <button id="add-product-btn" onclick="openOverlay()">Add Product</button> -->
         </nav>
 
         <table>
@@ -269,23 +315,23 @@
                             <%=items.quantity%>
                         </td>
                         <td>
-                            <%=items.cost%>
+                            THB <%=items.cost%>
                         </td>
                         <td>
-                            <%=items.quantity * items.cost%>
+                            THB <%=items.quantity * items.cost%>
                         </td>
                         <td>
-                            <%=items.quantity * items.amount%>
+                            THB <%=items.quantity * items.amount%>
                         </td>
                         <td>
-                            <%=items.amount - items.cost%>
+                            THB <%=(items.quantity * items.amount) - (items.quantity * items.cost)%>
                         </td>
                         <td>
                             <% let percentageValue=(items.amount - items.cost) / (items.quantity * items.amount) * 100;
                                 if (!isNaN(percentageValue)) { %>
                                 <%= percentageValue.toFixed(2) %>%
                                     <% } else { %>
-                                        0
+                                        0%
                                         <% } %>
                         </td>
                     </tr>
