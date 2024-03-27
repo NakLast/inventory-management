@@ -48,10 +48,32 @@ app.post("/login", async (req, res) => {
 
   const inventory = await service.getInventory();
 
+  let totalInventory = 0;
+  let totalSellPrice = 0;
+  let totalEvaluate = 0;
+  let totalDifference = 0;
+
+  inventory.forEach((item) => {
+    totalInventory += item.quantity * item.cost;
+    totalSellPrice += item.quantity * item.amount;
+    totalEvaluate += (item.quantity * item.amount) - (item.quantity * item.cost);
+
+    if (!isNaN(item.amount - item.cost) && item.quantity * item.amount !== 0) {
+        totalDifference += (item.amount - item.cost) / (item.quantity * item.amount) * 100;
+    } else {
+        totalDifference += 0;
+    }
+  });
+  totalDifference = totalDifference.toFixed(2);
+
   res.render("dashboard", {
     loggedinName: existingUser.username,
     productData: inventory,
     users: users,
+    totalInventory: totalInventory, 
+    totalSellPrice: totalSellPrice, 
+    totalEvaluate: totalEvaluate, 
+    totalDifference: totalDifference
   });
 });
 
