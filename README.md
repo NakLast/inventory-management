@@ -24,3 +24,24 @@ A lightweight inventory management system built with **EJS** for templating and 
    cd inventory-management
    npm install
    ```
+
+2. **Install dependencies**
+   ```sh
+   pnpm install
+   ```
+   
+3. **Set up Google Sheets API**
+    - Create a Google Cloud project.
+    - Enable the Google Sheets API.
+    - Generate service account credentials and share your sheet with the service account email.
+
+4. **Create an ```.env``` file** and add your Google Sheets credentials
+   ```
+   GOOGLE_SHEET_ID=your_google_sheet_id
+   GOOGLE_DEPLOYMENT_ID=your_google_deployment_id
+   ```
+
+5. **Run the server**
+   ```sh
+   npm start
+   ```
