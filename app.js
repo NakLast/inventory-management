@@ -56,12 +56,13 @@ app.post("/login", async (req, res) => {
   inventory.forEach((item) => {
     totalInventory += item.quantity * item.cost;
     totalSellPrice += item.quantity * item.amount;
-    totalEvaluate += (item.quantity * item.amount) - (item.quantity * item.cost);
+    totalEvaluate += item.quantity * item.amount - item.quantity * item.cost;
 
     if (!isNaN(item.amount - item.cost) && item.quantity * item.amount !== 0) {
-        totalDifference += (item.amount - item.cost) / (item.quantity * item.amount) * 100;
+      totalDifference +=
+        ((item.amount - item.cost) / (item.quantity * item.amount)) * 100;
     } else {
-        totalDifference += 0;
+      totalDifference += 0;
     }
   });
   totalDifference = totalDifference.toFixed(2);
@@ -70,10 +71,10 @@ app.post("/login", async (req, res) => {
     loggedinName: existingUser.username,
     productData: inventory,
     users: users,
-    totalInventory: totalInventory, 
-    totalSellPrice: totalSellPrice, 
-    totalEvaluate: totalEvaluate, 
-    totalDifference: totalDifference
+    totalInventory: totalInventory,
+    totalSellPrice: totalSellPrice,
+    totalEvaluate: totalEvaluate,
+    totalDifference: totalDifference,
   });
 });
 
@@ -89,17 +90,27 @@ app.get("/dashboard", async (req, res) => {
   inventory.forEach((item) => {
     totalInventory += item.quantity * item.cost;
     totalSellPrice += item.quantity * item.amount;
-    totalEvaluate += (item.quantity * item.amount) - (item.quantity * item.cost);
+    totalEvaluate += item.quantity * item.amount - item.quantity * item.cost;
 
     if (!isNaN(item.amount - item.cost) && item.quantity * item.amount !== 0) {
-        totalDifference += (item.amount - item.cost) / (item.quantity * item.amount) * 100;
+      totalDifference +=
+        ((item.amount - item.cost) / (item.quantity * item.amount)) * 100;
     } else {
-        totalDifference += 0;
+      totalDifference += 0;
     }
   });
   totalDifference = totalDifference.toFixed(2);
 
-  res.status(200).render("dashboard", { productData: inventory, users: users, totalInventory: totalInventory, totalSellPrice: totalSellPrice, totalEvaluate: totalEvaluate, totalDifference: totalDifference });
+  res
+    .status(200)
+    .render("dashboard", {
+      productData: inventory,
+      users: users,
+      totalInventory: totalInventory,
+      totalSellPrice: totalSellPrice,
+      totalEvaluate: totalEvaluate,
+      totalDifference: totalDifference,
+    });
 });
 
 app.get("/inventory", async (req, res) => {
@@ -232,12 +243,10 @@ app.get("/recordWorkTime", async (req, res) => {
     end_time: formatTimeTo24Hours(item.end_time),
   }));
 
-  res
-    .status(200)
-    .render("recordWorkTime", {
-      recordWorkTime: formattedRecordWorkTime,
-      employee: employee,
-    });
+  res.status(200).render("recordWorkTime", {
+    recordWorkTime: formattedRecordWorkTime,
+    employee: employee,
+  });
 });
 
 app.post("/addRecordWorkTime", async (req, res) => {
